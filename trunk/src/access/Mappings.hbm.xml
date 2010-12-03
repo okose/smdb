@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!--
+    Document   : Film.hbm.xml
+    Created on : 16 September 2010, 3:12 PM
+    Author     : karl
+    Description:
+        Mapper.
+        Rules: must all be mapped, can have multi classes, "text" maps to String okay.
+-->
+<hibernate-mapping default-lazy="false">
+
+  <class name="access.GoreLevel" table="GoreLevel">
+    <id name="Title"  />
+  </class>
+  
+  <class name="access.Film" table="Film">
+    <composite-id class="access.FilmKey" name="id">
+      <key-property name="Title"/>
+      <key-property name="NumberInTheSeries" type="integer"/>
+    </composite-id>
+    <version name="versionID" unsaved-value="undefined" type="integer" />
+    <property name="Year"/>
+    <property name="Runtime"/>
+    <property name="FEKTime"/>
+    <property name="PlotIsSequelTo"/>
+    <many-to-one name="FilmSeries"/>
+    <property name="MostFuckedUpMoment"/>
+
+    <set cascade="all" fetch="join" name="NudityShots" inverse="true">
+        <key>
+        <column name="Film" />
+        <column name="FilmNumber" />
+        </key>
+      <one-to-many class="access.NudityShot"/>
+    </set>
+    <set cascade="all" fetch="join" name="Kills" inverse="true">
+        <key>
+        <column name="Film" />
+        <column name="FilmNumber" />
+        </key>
+      <one-to-many class="access.Kill"/>
+    </set>
+    <set cascade="all" fetch="join" name="Survivals" inverse="true">
+        <key>
+        <column name="Film" />
+        <column name="FilmNumber" />
+        </key>
+      <one-to-many class="access.Survival"/>
+    </set>
+  </class>
+
+  <class name="access.FilmSeries">
+    <id name="Title">
+    </id>
+   <version name="versionID" unsaved-value="undefined" type="integer" />
+    <property name="Killer"/>
+    <property name="DominantTheme"/>
+    <set cascade="all" fetch="join" name="Films" inverse="true">
+      <key column="FilmSeries"/>
+      <one-to-many class="access.Film"/>
+    </set>
+  </class>
+
+  <class name="access.Weapon">
+    <id name="Title" />
+  </class>
+
+  <class name="access.BodyPart">
+    <id name="Title" />
+  </class>
+
+  <class name="access.CauseOfDeath">
+    <id name="Title" />
+  </class>
+
+  <class name="access.Stereotype">
+    <id name="Title" />
+    <property name="DescriptionShort"/>
+    <property name="DescriptionLong"/>
+    <property name="IsOnlyOnePerFilm"/>
+  </class>
+
+  <class name="access.Kill" table="Kill">
+    <id name="Id">
+    </id>
+    <property name="Time"/>
+    <property name="IsNoBody"/>
+    <property name="IsOffScreen"/>
+    <property name="IsNotByKillerDirectly"/>
+    <property name="IsVictimSexualDuringFilm"/>
+
+<!-- // Many to ones. -->
+    <many-to-one name="Stereotype" column="Stereotype"/>
+    <many-to-one name="Weapon" column="Weapon"/>
+    <many-to-one name="BodyPart" column="BodyPart" fetch="join"/>
+    <many-to-one name="CauseOfDeath" column="CauseOfDeath"/>
+    <many-to-one name="GoreLevel" column="GoreLevel"/>
+    <many-to-one name="Film">
+        <column name="Film" />
+        <column name="FilmNumber"/>
+    </many-to-one>
+  </class>
+
+  <class name="access.NudityShot" table="NudityShot">
+    <id name="Id">
+    </id>
+    <version name="versionID" unsaved-value="undefined" type="integer" />
+    <property name="Time"/>
+    <property name="Type"/>
+
+    <many-to-one name="Stereotype" column="Stereotype"/>
+    <many-to-one name="Film">
+    <column name="Film" />
+    <column name="FilmNumber"/>
+  </many-to-one>
+  </class>
+
+  <class name="access.Survival" table="Survival">
+    <id name="Id">
+    </id>
+
+    <many-to-one name="Stereotype"/>
+    <many-to-one name="Film">
+    <column name="Film" />
+    <column name="FilmNumber"/>
+  </many-to-one>
+  </class>
+  
+</hibernate-mapping>
