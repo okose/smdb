@@ -1,0 +1,1 @@
+Slasher Movie DataBase. A website like IMDB.com except for slasher films and it has user generated records. This only cares about information not displayed on any other site I could find, such as information related to the kills and nudity shots in each film.
